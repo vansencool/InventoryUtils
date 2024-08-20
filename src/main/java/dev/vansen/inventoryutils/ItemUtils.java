@@ -1,7 +1,10 @@
 package dev.vansen.inventoryutils;
 
+import dev.vansen.inventoryutils.annotations.NotTested;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
@@ -10,6 +13,7 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -142,6 +146,7 @@ public class ItemUtils {
      * @param durability The new durability value.
      * @return The current ItemUtils instance.
      */
+    @Deprecated
     public ItemUtils durability(short durability) {
         itemStack.setDurability(durability);
         return this;
@@ -153,25 +158,12 @@ public class ItemUtils {
      * @param damage The new damage value.
      * @return The current ItemUtils instance.
      */
+    @NotTested
     public ItemUtils damage(int damage) {
         ItemMeta meta = itemStack.getItemMeta();
         if (meta != null) {
             Damageable damageable = (Damageable) meta;
             damageable.setDamage(damage);
-            itemStack.setItemMeta(meta);
-        }
-        return this;
-    }
-
-    /**
-     * Sets the enchantments of the ItemStack.
-     *
-     * @return The current ItemUtils instance.
-     */
-    public ItemUtils enchants() {
-        ItemMeta meta = itemStack.getItemMeta();
-        if (meta != null) {
-            meta.getEnchants(); // This line seems to be redundant; it doesn't modify the meta.
             itemStack.setItemMeta(meta);
         }
         return this;
@@ -202,12 +194,46 @@ public class ItemUtils {
      * @return The current ItemUtils instance.
      */
     public ItemUtils enchant(Enchantment enchantment, int level) {
+        return enchant(enchantment, level, true);
+    }
+
+    /**
+     * Removes an enchantment from the ItemStack.
+     *
+     * @param enchantment The enchantment to remove.
+     * @return The current ItemUtils instance.
+     */
+    public ItemUtils removeEnchantment(Enchantment enchantment) {
         ItemMeta meta = itemStack.getItemMeta();
         if (meta != null) {
-            meta.addEnchant(enchantment, level, true);
+            meta.removeEnchant(enchantment);
             itemStack.setItemMeta(meta);
         }
         return this;
+    }
+
+    /**
+     * Checks if the ItemStack has an enchantment.
+     *
+     * @param enchantment The enchantment to check for.
+     * @return True if the ItemStack has the enchantment, false otherwise.
+     */
+    public boolean hasEnchantment(Enchantment enchantment) {
+        ItemMeta meta = itemStack.getItemMeta();
+        return meta != null && meta.hasEnchant(enchantment);
+    }
+
+    /**
+     * Gets the enchantments of the ItemStack.
+     *
+     * @return The enchantments of the ItemStack.
+     */
+    public Map<Enchantment, Integer> getEnchantments() {
+        ItemMeta meta = itemStack.getItemMeta();
+        if (meta != null) {
+            return meta.getEnchants();
+        }
+        return null;
     }
 
     /**
@@ -235,36 +261,6 @@ public class ItemUtils {
         ItemMeta meta = itemStack.getItemMeta();
         if (meta != null) {
             meta.setLore(List.of(lore));
-            itemStack.setItemMeta(meta);
-        }
-        return this;
-    }
-
-    /**
-     * Adds item flags to the ItemStack.
-     *
-     * @param flags The item flags to add.
-     * @return The current ItemUtils instance.
-     */
-    public ItemUtils itemFlags(ItemFlag... flags) {
-        ItemMeta meta = itemStack.getItemMeta();
-        if (meta != null) {
-            meta.addItemFlags(flags);
-            itemStack.setItemMeta(meta);
-        }
-        return this;
-    }
-
-    /**
-     * Removes item flags from the ItemStack.
-     *
-     * @param flags The item flags to remove.
-     * @return The current ItemUtils instance.
-     */
-    public ItemUtils removeItemFlags(ItemFlag... flags) {
-        ItemMeta meta = itemStack.getItemMeta();
-        if (meta != null) {
-            meta.removeItemFlags(flags);
             itemStack.setItemMeta(meta);
         }
         return this;
@@ -323,42 +319,125 @@ public class ItemUtils {
     public ItemUtils clearLore() {
         ItemMeta meta = itemStack.getItemMeta();
         if (meta != null) {
-            if (meta.lore() != null) {
-                meta.lore(List.of());
-            } else if (meta.getLore() != null) {
-                meta.setLore(List.of());
-            }
+            meta.setLore(null);
             itemStack.setItemMeta(meta);
         }
         return this;
     }
 
     /**
-     * Removes an enchantment from the ItemStack.
+     * Checks if the ItemStack has a lore.
      *
-     * @param enchantment The enchantment to remove.
+     * @return True if the ItemStack has lore, false otherwise.
+     */
+    public boolean hasLore() {
+        ItemMeta meta = itemStack.getItemMeta();
+        return meta != null && meta.hasLore();
+    }
+
+    /**
+     * Adds item flags to the ItemStack.
+     *
+     * @param flags The item flags to add.
      * @return The current ItemUtils instance.
      */
-    public ItemUtils removeEnchantment(Enchantment enchantment) {
+    public ItemUtils itemFlags(ItemFlag... flags) {
         ItemMeta meta = itemStack.getItemMeta();
         if (meta != null) {
-            meta.removeEnchant(enchantment);
+            meta.addItemFlags(flags);
             itemStack.setItemMeta(meta);
         }
         return this;
     }
 
     /**
-     * Checks if the ItemStack has an enchantment.
+     * Removes item flags from the ItemStack.
      *
-     * @param enchantment The enchantment to check for.
-     * @return True if the ItemStack has the enchantment, false otherwise.
+     * @param flags The item flags to remove.
+     * @return The current ItemUtils instance.
      */
-    public boolean hasEnchantment(Enchantment enchantment) {
+    public ItemUtils removeItemFlags(ItemFlag... flags) {
         ItemMeta meta = itemStack.getItemMeta();
         if (meta != null) {
-            return meta.hasEnchant(enchantment);
+            meta.removeItemFlags(flags);
+            itemStack.setItemMeta(meta);
         }
-        return false;
+        return this;
+    }
+
+    /**
+     * Sets a custom model data value for the ItemStack.
+     *
+     * @param modelData The custom model data value.
+     * @return The current ItemUtils instance.
+     */
+    public ItemUtils customModelData(int modelData) {
+        ItemMeta meta = itemStack.getItemMeta();
+        if (meta != null) {
+            meta.setCustomModelData(modelData);
+            itemStack.setItemMeta(meta);
+        }
+        return this;
+    }
+
+    /**
+     * Adds an attribute modifier to the ItemStack.
+     *
+     * @param attribute The attribute to modify.
+     * @param modifier  The attribute modifier to add.
+     * @return The current ItemUtils instance.
+     */
+    public ItemUtils addAttributeModifier(Attribute attribute, AttributeModifier modifier) {
+        ItemMeta meta = itemStack.getItemMeta();
+        if (meta != null) {
+            meta.addAttributeModifier(attribute, modifier);
+            itemStack.setItemMeta(meta);
+        }
+        return this;
+    }
+
+    /**
+     * Removes an attribute modifier from the ItemStack.
+     *
+     * @param attribute The attribute to modify.
+     * @param modifier  The attribute modifier to remove.
+     * @return The current ItemUtils instance.
+     */
+    public ItemUtils removeAttributeModifier(Attribute attribute, AttributeModifier modifier) {
+        ItemMeta meta = itemStack.getItemMeta();
+        if (meta != null) {
+            meta.removeAttributeModifier(attribute, modifier);
+            itemStack.setItemMeta(meta);
+        }
+        return this;
+    }
+
+    /**
+     * Removes all attribute modifiers from the ItemStack.
+     *
+     * @return The current ItemUtils instance.
+     */
+    public ItemUtils clearAttributeModifiers() {
+        ItemMeta meta = itemStack.getItemMeta();
+        if (meta != null) {
+            meta.getAttributeModifiers().clear();
+            itemStack.setItemMeta(meta);
+        }
+        return this;
+    }
+
+    /**
+     * Gets the serialized form of the ItemStack.
+     *
+     * @return The serialized form of the ItemStack.
+     */
+    public Map<String, Object> serialize() {
+        ItemMeta meta = itemStack.getItemMeta();
+        if (meta != null) {
+            meta.getAttributeModifiers().clear();
+            itemStack.setItemMeta(meta);
+            return meta.serialize();
+        }
+        return null;
     }
 }

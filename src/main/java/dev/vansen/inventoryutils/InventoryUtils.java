@@ -15,8 +15,10 @@ public class InventoryUtils {
      * Registers event listeners necessary for handling inventory events.
      *
      * @param plugin The instance of the JavaPlugin.
+     * @throws IllegalArgumentException If the plugin instance is null.
      */
     public static void init(JavaPlugin plugin) {
+        if (plugin == null) throw new IllegalArgumentException("Plugin cannot be null");
         InventoryUtils.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(new InventoryEventListener(), plugin);
     }

@@ -82,6 +82,21 @@ public class FairInventory implements InventoryHolder {
         return new FairInventory(title, rows);
     }
 
+    /**
+     * Creates a new FairInventory instance with the given inventory.
+     *
+     * @param inventory The inventory to wrap.
+     * @return A new FairInventory instance.
+     */
+    public static FairInventory create(Inventory inventory) {
+        return new FairInventory(inventory);
+    }
+
+    /**
+     * Gets the inventory.
+     *
+     * @return The inventory.
+     */
     @Override
     public @NotNull Inventory getInventory() {
         return inventory;
