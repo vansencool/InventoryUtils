@@ -35,4 +35,4 @@ dependencies {
 ```
 
 # How to use it?
-You can view on how to use it here: https://github.com/vansencool/InventoryUtils
+You can view on how to use it here: https://github.com/vansencool/InventoryUtils/wiki
