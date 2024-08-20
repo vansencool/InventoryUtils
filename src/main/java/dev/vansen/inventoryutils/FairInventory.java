@@ -1,10 +1,13 @@
 package dev.vansen.inventoryutils;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +18,7 @@ import java.util.function.Predicate;
 /**
  * A customizable inventory class that handles inventory events and actions.
  */
+@SuppressWarnings("unused")
 public class FairInventory implements InventoryHolder {
 
     private Inventory inventory;
@@ -25,10 +29,34 @@ public class FairInventory implements InventoryHolder {
     private BiConsumer<InventoryDragEvent, Player> dragHandler;
     private Predicate<InventoryCloseEvent> preventCloseCondition;
     private Predicate<InventoryClickEvent> itemClickCondition;
-
     private final Map<Integer, ItemUtils> itemMap = new HashMap<>();
 
-    private FairInventory(String title, int rows) {
+    /**
+     * Constructs a new FairInventory instance with the given inventory.
+     *
+     * @param inventory The inventory to wrap.
+     */
+    public FairInventory(Inventory inventory) {
+        this.inventory = inventory;
+    }
+
+    /**
+     * Constructs a new FairInventory instance with the given title and number of rows.
+     *
+     * @param title The title of the inventory.
+     * @param rows  The number of rows in the inventory.
+     */
+    public FairInventory(String title, int rows) {
+        this.inventory = Bukkit.createInventory(this, rows * 9, title);
+    }
+
+    /**
+     * Constructs a new FairInventory instance with the given title and number of rows.
+     *
+     * @param title The title of the inventory as a Component.
+     * @param rows  The number of rows in the inventory.
+     */
+    public FairInventory(Component title, int rows) {
         this.inventory = Bukkit.createInventory(this, rows * 9, title);
     }
 
@@ -43,8 +71,19 @@ public class FairInventory implements InventoryHolder {
         return new FairInventory(title, rows);
     }
 
+    /**
+     * Creates a new FairInventory instance with the given title and number of rows.
+     *
+     * @param title The title of the inventory as a Component.
+     * @param rows  The number of rows in the inventory.
+     * @return A new FairInventory instance.
+     */
+    public static FairInventory create(Component title, int rows) {
+        return new FairInventory(title, rows);
+    }
+
     @Override
-    public Inventory getInventory() {
+    public @NotNull Inventory getInventory() {
         return inventory;
     }
 
@@ -61,6 +100,17 @@ public class FairInventory implements InventoryHolder {
     }
 
     /**
+     * Adds an item to the inventory.
+     *
+     * @param item The ItemStack instance representing the item to add.
+     * @return The current FairInventory instance.
+     */
+    public FairInventory add(ItemStack item) {
+        inventory.addItem(item);
+        return this;
+    }
+
+    /**
      * Sets an item at a specific slot in the inventory.
      *
      * @param slot The slot to set the item in (1-based index).
@@ -70,6 +120,18 @@ public class FairInventory implements InventoryHolder {
     public FairInventory set(int slot, ItemUtils item) {
         inventory.setItem(slot - 1, item.get()); // Adjusting for 1-based indexing
         itemMap.put(slot - 1, item);
+        return this;
+    }
+
+    /**
+     * Sets an item at a specific slot in the inventory.
+     *
+     * @param slot The slot to set the item in (1-based index).
+     * @param item The ItemStack instance representing the item to set.
+     * @return The current FairInventory instance.
+     */
+    public FairInventory set(int slot, ItemStack item) {
+        inventory.setItem(slot - 1, item); // Adjusting for 1-based indexing
         return this;
     }
 
@@ -162,14 +224,58 @@ public class FairInventory implements InventoryHolder {
     }
 
     /**
-     * Sets the title of the inventory. The inventory contents are preserved.
+     * Creates a new inventory and sets the title of the inventory. The inventory contents are preserved.
      *
      * @param title The new title of the inventory.
      * @return The current FairInventory instance.
      */
-    public FairInventory title(String title) {
+    public FairInventory change(String title) {
         // Create a new inventory with the updated title
         Inventory newInventory = Bukkit.createInventory(this, inventory.getSize(), title);
+        newInventory.setContents(inventory.getContents());
+        this.inventory = newInventory;
+        return this;
+    }
+
+    /**
+     * Makes a new inventory, The inventory contents are preserved.
+     *
+     * @param title The new title of the inventory.
+     * @param rows  The new number of rows in the inventory.
+     * @return The current FairInventory instance.
+     */
+    public FairInventory change(String title, int rows) {
+        // Create a new inventory with the updated title
+        Inventory newInventory = Bukkit.createInventory(this, rows * 9, title);
+        newInventory.setContents(inventory.getContents());
+        this.inventory = newInventory;
+        return this;
+    }
+
+    /**
+     * Creates a new inventory and sets the title of the inventory. The inventory contents are preserved.
+     *
+     * @param title The new title of the inventory.
+     * @return The current FairInventory instance.
+     */
+    public FairInventory change(Component title) {
+        // Create a new inventory with the updated title
+        Inventory newInventory = Bukkit.createInventory(this, inventory.getSize(), title);
+        newInventory.setContents(inventory.getContents());
+        this.inventory = newInventory;
+        return this;
+    }
+
+    /**
+     * Makes a new inventory, The inventory contents are preserved.
+     *
+     * @param title The new title of the inventory.
+     * @param rows  The new number of rows in the inventory.
+     * @return The current FairInventory instance.
+     */
+    public FairInventory change(Component title, int rows) {
+        // Create a new inventory with the updated title
+        Inventory newInventory = Bukkit.createInventory(this, rows * 9, title);
         newInventory.setContents(inventory.getContents());
         this.inventory = newInventory;
         return this;

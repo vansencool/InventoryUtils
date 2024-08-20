@@ -3,8 +3,9 @@ package dev.vansen.inventoryutils;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- * Utility class for initializing and managing inventory-related functionality in a Bukkit plugin.
+ * Utility class for initializing and managing inventory-related events.
  */
+@SuppressWarnings("unused")
 public class InventoryUtils {
 
     private static JavaPlugin plugin;
@@ -13,10 +14,10 @@ public class InventoryUtils {
      * Initializes the inventory utilities with the given plugin instance.
      * Registers event listeners necessary for handling inventory events.
      *
-     * @param pluginInstance The instance of the JavaPlugin.
+     * @param plugin The instance of the JavaPlugin.
      */
-    public static void init(JavaPlugin pluginInstance) {
-        plugin = pluginInstance;
+    public static void init(JavaPlugin plugin) {
+        InventoryUtils.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(new InventoryEventListener(), plugin);
     }
 

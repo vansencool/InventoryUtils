@@ -256,6 +256,21 @@ public class ItemUtils {
     }
 
     /**
+     * Removes item flags from the ItemStack.
+     *
+     * @param flags The item flags to remove.
+     * @return The current ItemUtils instance.
+     */
+    public ItemUtils removeItemFlags(ItemFlag... flags) {
+        ItemMeta meta = itemStack.getItemMeta();
+        if (meta != null) {
+            meta.removeItemFlags(flags);
+            itemStack.setItemMeta(meta);
+        }
+        return this;
+    }
+
+    /**
      * Sets the lore of the ItemStack using a list of strings.
      *
      * @param lore The new lore as a list of strings.
@@ -298,5 +313,52 @@ public class ItemUtils {
             itemStack.setItemMeta(meta);
         }
         return this;
+    }
+
+    /**
+     * Clears the lore of the ItemStack.
+     *
+     * @return The current ItemUtils instance.
+     */
+    public ItemUtils clearLore() {
+        ItemMeta meta = itemStack.getItemMeta();
+        if (meta != null) {
+            if (meta.lore() != null) {
+                meta.lore(List.of());
+            } else if (meta.getLore() != null) {
+                meta.setLore(List.of());
+            }
+            itemStack.setItemMeta(meta);
+        }
+        return this;
+    }
+
+    /**
+     * Removes an enchantment from the ItemStack.
+     *
+     * @param enchantment The enchantment to remove.
+     * @return The current ItemUtils instance.
+     */
+    public ItemUtils removeEnchantment(Enchantment enchantment) {
+        ItemMeta meta = itemStack.getItemMeta();
+        if (meta != null) {
+            meta.removeEnchant(enchantment);
+            itemStack.setItemMeta(meta);
+        }
+        return this;
+    }
+
+    /**
+     * Checks if the ItemStack has an enchantment.
+     *
+     * @param enchantment The enchantment to check for.
+     * @return True if the ItemStack has the enchantment, false otherwise.
+     */
+    public boolean hasEnchantment(Enchantment enchantment) {
+        ItemMeta meta = itemStack.getItemMeta();
+        if (meta != null) {
+            return meta.hasEnchant(enchantment);
+        }
+        return false;
     }
 }
