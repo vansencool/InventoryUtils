@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'dev.vansen'
-version = '1.0.0'
+version = '1.0.1'
 
 repositories {
     mavenCentral()
@@ -26,10 +26,23 @@ tasks.jar {
     exclude 'org/jetbrains/**'
 }
 
+tasks.register('sourcesJar', Jar) {
+    archiveClassifier.set('sources')
+    from sourceSets.main.allSource
+}
+
+tasks.register('javadocJar', Jar) {
+    archiveClassifier.set('javadoc')
+    from tasks.javadoc
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
+
+            artifact tasks.sourcesJar
+            artifact tasks.javadocJar
         }
     }
 }
