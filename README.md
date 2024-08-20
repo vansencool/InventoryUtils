@@ -33,3 +33,6 @@ dependencies {
     <version>1.0.2</version>
 </dependency>
 ```
+
+# How to use it?
+You can view on how to use it here: https://github.com/vansencool/InventoryUtils
