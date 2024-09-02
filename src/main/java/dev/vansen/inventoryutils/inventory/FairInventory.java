@@ -1,5 +1,8 @@
-package dev.vansen.inventoryutils;
+package dev.vansen.inventoryutils.inventory;
 
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import dev.vansen.inventoryutils.InventoryUtils;
+import dev.vansen.inventoryutils.item.ItemUtils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -18,7 +21,7 @@ import java.util.function.Predicate;
 /**
  * A customizable inventory class that handles inventory events and actions.
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "deprecation"})
 public class FairInventory implements InventoryHolder {
 
     private Inventory inventory;
@@ -36,7 +39,7 @@ public class FairInventory implements InventoryHolder {
      *
      * @param inventory The inventory to wrap.
      */
-    public FairInventory(Inventory inventory) {
+    public FairInventory(@NotNull Inventory inventory) {
         this.inventory = inventory;
     }
 
@@ -44,42 +47,42 @@ public class FairInventory implements InventoryHolder {
      * Constructs a new FairInventory instance with the given title and number of rows.
      *
      * @param title The title of the inventory.
-     * @param rows  The number of rows in the inventory.
+     * @param size  The number of rows in the inventory.
      */
-    public FairInventory(String title, int rows) {
-        this.inventory = Bukkit.createInventory(this, rows * 9, title);
+    public FairInventory(@NotNull String title, @NotNull InventorySize size) {
+        this.inventory = Bukkit.createInventory(this, size.get(), title);
     }
 
     /**
      * Constructs a new FairInventory instance with the given title and number of rows.
      *
      * @param title The title of the inventory as a Component.
-     * @param rows  The number of rows in the inventory.
+     * @param size  The number of rows in the inventory.
      */
-    public FairInventory(Component title, int rows) {
-        this.inventory = Bukkit.createInventory(this, rows * 9, title);
+    public FairInventory(@NotNull Component title, @NotNull InventorySize size) {
+        this.inventory = Bukkit.createInventory(this, size.get(), title);
     }
 
     /**
      * Creates a new FairInventory instance with the given title and number of rows.
      *
      * @param title The title of the inventory.
-     * @param rows  The number of rows in the inventory.
+     * @param size  The number of rows in the inventory.
      * @return A new FairInventory instance.
      */
-    public static FairInventory create(String title, int rows) {
-        return new FairInventory(title, rows);
+    public static FairInventory create(@NotNull String title, @NotNull InventorySize size) {
+        return new FairInventory(title, InventorySize.size(size.get()));
     }
 
     /**
      * Creates a new FairInventory instance with the given title and number of rows.
      *
      * @param title The title of the inventory as a Component.
-     * @param rows  The number of rows in the inventory.
+     * @param size  The number of rows in the inventory.
      * @return A new FairInventory instance.
      */
-    public static FairInventory create(Component title, int rows) {
-        return new FairInventory(title, rows);
+    public static FairInventory create(@NotNull Component title, @NotNull InventorySize size) {
+        return new FairInventory(title, InventorySize.size(size.get()));
     }
 
     /**
@@ -88,7 +91,7 @@ public class FairInventory implements InventoryHolder {
      * @param inventory The inventory to wrap.
      * @return A new FairInventory instance.
      */
-    public static FairInventory create(Inventory inventory) {
+    public static FairInventory create(@NotNull Inventory inventory) {
         return new FairInventory(inventory);
     }
 
@@ -108,9 +111,10 @@ public class FairInventory implements InventoryHolder {
      * @param item The ItemUtils instance representing the item to add.
      * @return The current FairInventory instance.
      */
-    public FairInventory add(ItemUtils item) {
-        inventory.addItem(item.get());
-        itemMap.put(inventory.first(item.get()), item);
+    @CanIgnoreReturnValue
+    public FairInventory add(@NotNull ItemUtils item) {
+        inventory.addItem(item.builder().get());
+        itemMap.put(inventory.first(item.builder().get()), item);
         return this;
     }
 
@@ -120,7 +124,8 @@ public class FairInventory implements InventoryHolder {
      * @param item The ItemStack instance representing the item to add.
      * @return The current FairInventory instance.
      */
-    public FairInventory add(ItemStack item) {
+    @CanIgnoreReturnValue
+    public FairInventory add(@NotNull ItemStack item) {
         inventory.addItem(item);
         return this;
     }
@@ -132,8 +137,9 @@ public class FairInventory implements InventoryHolder {
      * @param item The ItemUtils instance representing the item to set.
      * @return The current FairInventory instance.
      */
-    public FairInventory set(int slot, ItemUtils item) {
-        inventory.setItem(slot - 1, item.get()); // Adjusting for 1-based indexing
+    @CanIgnoreReturnValue
+    public FairInventory set(int slot, @NotNull ItemUtils item) {
+        inventory.setItem(slot - 1, item.builder().get()); // Adjusting for 1-based indexing
         itemMap.put(slot - 1, item);
         return this;
     }
@@ -145,8 +151,36 @@ public class FairInventory implements InventoryHolder {
      * @param item The ItemStack instance representing the item to set.
      * @return The current FairInventory instance.
      */
-    public FairInventory set(int slot, ItemStack item) {
+    @CanIgnoreReturnValue
+    public FairInventory set(int slot, @NotNull ItemStack item) {
         inventory.setItem(slot - 1, item); // Adjusting for 1-based indexing
+        return this;
+    }
+
+    /**
+     * Sets an item at a specific slot in the inventory.
+     *
+     * @param slot The slot to set the item in (0-based index).
+     * @param item The ItemUtils instance representing the item to set.
+     * @return The current FairInventory instance.
+     */
+    @CanIgnoreReturnValue
+    public FairInventory set(int slot, @NotNull ItemUtils item, boolean disable) {
+        inventory.setItem(slot, item.builder().get());
+        itemMap.put(slot, item);
+        return this;
+    }
+
+    /**
+     * Sets an item at a specific slot in the inventory.
+     *
+     * @param slot The slot to set the item in (0-based index).
+     * @param item The ItemStack instance representing the item to set.
+     * @return The current FairInventory instance.
+     */
+    @CanIgnoreReturnValue
+    public FairInventory set(int slot, @NotNull ItemStack item, boolean disable) {
+        inventory.setItem(slot, item);
         return this;
     }
 
@@ -156,7 +190,8 @@ public class FairInventory implements InventoryHolder {
      * @param action The action to perform on inventory open.
      * @return The current FairInventory instance.
      */
-    public FairInventory open(Consumer<InventoryOpenEvent> action) {
+    @CanIgnoreReturnValue
+    public FairInventory open(@NotNull Consumer<InventoryOpenEvent> action) {
         this.openAction = action;
         return this;
     }
@@ -167,7 +202,8 @@ public class FairInventory implements InventoryHolder {
      * @param action The action to perform on inventory close.
      * @return The current FairInventory instance.
      */
-    public FairInventory close(Consumer<InventoryCloseEvent> action) {
+    @CanIgnoreReturnValue
+    public FairInventory close(@NotNull Consumer<InventoryCloseEvent> action) {
         this.closeAction = action;
         return this;
     }
@@ -178,7 +214,8 @@ public class FairInventory implements InventoryHolder {
      * @param handler The handler for inventory actions.
      * @return The current FairInventory instance.
      */
-    public FairInventory action(BiConsumer<InventoryAction, InventoryClickEvent> handler) {
+    @CanIgnoreReturnValue
+    public FairInventory action(@NotNull BiConsumer<InventoryAction, InventoryClickEvent> handler) {
         this.actionHandler = handler;
         return this;
     }
@@ -189,7 +226,8 @@ public class FairInventory implements InventoryHolder {
      * @param handler The handler for click types.
      * @return The current FairInventory instance.
      */
-    public FairInventory clickType(BiConsumer<ClickType, InventoryClickEvent> handler) {
+    @CanIgnoreReturnValue
+    public FairInventory clickType(@NotNull BiConsumer<ClickType, InventoryClickEvent> handler) {
         this.clickTypeHandler = handler;
         return this;
     }
@@ -200,6 +238,7 @@ public class FairInventory implements InventoryHolder {
      * @param prevent Whether to prevent the inventory from closing.
      * @return The current FairInventory instance.
      */
+    @CanIgnoreReturnValue
     public FairInventory preventClose(boolean prevent) {
         this.preventCloseCondition = event -> prevent;
         return this;
@@ -211,7 +250,8 @@ public class FairInventory implements InventoryHolder {
      * @param condition The condition to check for preventing close.
      * @return The current FairInventory instance.
      */
-    public FairInventory preventCloseIf(Predicate<InventoryCloseEvent> condition) {
+    @CanIgnoreReturnValue
+    public FairInventory preventCloseIf(@NotNull Predicate<InventoryCloseEvent> condition) {
         this.preventCloseCondition = condition;
         return this;
     }
@@ -222,7 +262,8 @@ public class FairInventory implements InventoryHolder {
      * @param condition The condition to check for handling clicks.
      * @return The current FairInventory instance.
      */
-    public FairInventory itemClickCondition(Predicate<InventoryClickEvent> condition) {
+    @CanIgnoreReturnValue
+    public FairInventory itemClickCondition(@NotNull Predicate<InventoryClickEvent> condition) {
         this.itemClickCondition = condition;
         return this;
     }
@@ -233,7 +274,8 @@ public class FairInventory implements InventoryHolder {
      * @param handler The handler for inventory drag events.
      * @return The current FairInventory instance.
      */
-    public FairInventory drag(BiConsumer<InventoryDragEvent, Player> handler) {
+    @CanIgnoreReturnValue
+    public FairInventory drag(@NotNull BiConsumer<InventoryDragEvent, Player> handler) {
         this.dragHandler = handler;
         return this;
     }
@@ -244,8 +286,7 @@ public class FairInventory implements InventoryHolder {
      * @param title The new title of the inventory.
      * @return The current FairInventory instance.
      */
-    public FairInventory change(String title) {
-        // Create a new inventory with the updated title
+    public FairInventory change(@NotNull String title) {
         Inventory newInventory = Bukkit.createInventory(this, inventory.getSize(), title);
         newInventory.setContents(inventory.getContents());
         this.inventory = newInventory;
@@ -256,12 +297,11 @@ public class FairInventory implements InventoryHolder {
      * Makes a new inventory, The inventory contents are preserved.
      *
      * @param title The new title of the inventory.
-     * @param rows  The new number of rows in the inventory.
+     * @param size  The new number of rows in the inventory.
      * @return The current FairInventory instance.
      */
-    public FairInventory change(String title, int rows) {
-        // Create a new inventory with the updated title
-        Inventory newInventory = Bukkit.createInventory(this, rows * 9, title);
+    public FairInventory change(@NotNull String title, @NotNull InventorySize size) {
+        Inventory newInventory = Bukkit.createInventory(this, size.get(), title);
         newInventory.setContents(inventory.getContents());
         this.inventory = newInventory;
         return this;
@@ -273,8 +313,7 @@ public class FairInventory implements InventoryHolder {
      * @param title The new title of the inventory.
      * @return The current FairInventory instance.
      */
-    public FairInventory change(Component title) {
-        // Create a new inventory with the updated title
+    public FairInventory change(@NotNull Component title) {
         Inventory newInventory = Bukkit.createInventory(this, inventory.getSize(), title);
         newInventory.setContents(inventory.getContents());
         this.inventory = newInventory;
@@ -285,12 +324,11 @@ public class FairInventory implements InventoryHolder {
      * Makes a new inventory, The inventory contents are preserved.
      *
      * @param title The new title of the inventory.
-     * @param rows  The new number of rows in the inventory.
+     * @param size  The new number of rows in the inventory.
      * @return The current FairInventory instance.
      */
-    public FairInventory change(Component title, int rows) {
-        // Create a new inventory with the updated title
-        Inventory newInventory = Bukkit.createInventory(this, rows * 9, title);
+    public FairInventory change(@NotNull Component title, @NotNull InventorySize size) {
+        Inventory newInventory = Bukkit.createInventory(this, size.get(), title);
         newInventory.setContents(inventory.getContents());
         this.inventory = newInventory;
         return this;
@@ -301,7 +339,7 @@ public class FairInventory implements InventoryHolder {
      *
      * @param event The InventoryOpenEvent.
      */
-    public void handleOpen(InventoryOpenEvent event) {
+    public void handleOpen(@NotNull InventoryOpenEvent event) {
         if (openAction != null) {
             openAction.accept(event);
         }
@@ -312,9 +350,9 @@ public class FairInventory implements InventoryHolder {
      *
      * @param event The InventoryCloseEvent.
      */
-    public void handleClose(InventoryCloseEvent event) {
+    public void handleClose(@NotNull InventoryCloseEvent event) {
         if (preventCloseCondition != null && preventCloseCondition.test(event)) {
-            Bukkit.getScheduler().scheduleSyncDelayedTask(InventoryUtils.get(), () -> ((Player) event.getPlayer()).openInventory(inventory), 1L);
+            Bukkit.getScheduler().scheduleSyncDelayedTask(InventoryUtils.get(), () -> event.getPlayer().openInventory(inventory), 1L);
         } else if (closeAction != null) {
             closeAction.accept(event);
         }
@@ -325,14 +363,14 @@ public class FairInventory implements InventoryHolder {
      *
      * @param event The InventoryClickEvent.
      */
-    public void handleClick(InventoryClickEvent event) {
+    public void handleClick(@NotNull InventoryClickEvent event) {
         if (itemClickCondition != null && !itemClickCondition.test(event)) {
             return;
         }
 
         ItemUtils item = itemMap.get(event.getSlot());
         if (item != null) {
-            item.handleClick(event);
+            item.interactionHandler().handleClick(event);
         }
         if (actionHandler != null) {
             actionHandler.accept(event.getAction(), event);
@@ -347,7 +385,7 @@ public class FairInventory implements InventoryHolder {
      *
      * @param event The InventoryDragEvent.
      */
-    public void handleDrag(InventoryDragEvent event) {
+    public void handleDrag(@NotNull InventoryDragEvent event) {
         if (dragHandler != null) {
             dragHandler.accept(event, (Player) event.getWhoClicked());
         }
@@ -358,7 +396,7 @@ public class FairInventory implements InventoryHolder {
      *
      * @param player The player to open the inventory for.
      */
-    public void show(Player player) {
-        player.openInventory(inventory);
+    public void show(@NotNull Player player) {
+        Bukkit.getScheduler().runTask(InventoryUtils.get(), () -> player.openInventory(inventory)); // Thread safe
     }
 }
