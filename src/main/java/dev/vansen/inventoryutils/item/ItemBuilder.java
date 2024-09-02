@@ -31,6 +31,15 @@ public class ItemBuilder {
     }
 
     /**
+     * Constructs a new ItemBuilder instance for the specified ItemStack.
+     *
+     * @param itemStack The ItemStack.
+     */
+    public ItemBuilder(@NotNull ItemStack itemStack) {
+        this.itemStack = itemStack;
+    }
+
+    /**
      * Creates a new ItemBuilder instance for the specified material.
      *
      * @param material The material of the item.

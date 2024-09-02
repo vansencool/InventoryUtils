@@ -22,6 +22,15 @@ public class ItemUtils {
     }
 
     /**
+     * Returns an ItemBuilder instance for further customization on the current ItemUtils state.
+     *
+     * @return An ItemUtils instance.
+     */
+    public @NotNull ItemBuilder builder() {
+        return new ItemBuilder(item);
+    }
+
+    /**
      * Gets the ItemInteractionHandler for managing item interactions.
      *
      * @return The ItemInteractionHandler instance.

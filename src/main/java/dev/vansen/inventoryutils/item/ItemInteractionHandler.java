@@ -49,11 +49,11 @@ public class ItemInteractionHandler {
     }
 
     /**
-     * Gets the underlying ItemStack.
+     * Builds and returns an ItemUtils instance.
      *
-     * @return The ItemStack.
+     * @return An ItemUtils instance.
      */
-    public @NotNull ItemStack get() {
-        return itemStack;
+    public @NotNull ItemUtils build() {
+        return new ItemUtils(itemStack);
     }
 }
