@@ -113,8 +113,8 @@ public class FairInventory implements InventoryHolder {
      */
     @CanIgnoreReturnValue
     public FairInventory add(@NotNull ItemUtils item) {
-        inventory.addItem(item.builder().get());
-        itemMap.put(inventory.first(item.builder().get()), item);
+        inventory.addItem(item.get());
+        itemMap.put(inventory.first(item.get()), item);
         return this;
     }
 
@@ -139,7 +139,7 @@ public class FairInventory implements InventoryHolder {
      */
     @CanIgnoreReturnValue
     public FairInventory set(int slot, @NotNull ItemUtils item) {
-        inventory.setItem(slot - 1, item.builder().get()); // Adjusting for 1-based indexing
+        inventory.setItem(slot - 1, item.get()); // Adjusting for 1-based indexing
         itemMap.put(slot - 1, item);
         return this;
     }
@@ -166,7 +166,7 @@ public class FairInventory implements InventoryHolder {
      */
     @CanIgnoreReturnValue
     public FairInventory set(int slot, @NotNull ItemUtils item, boolean disable) {
-        inventory.setItem(slot, item.builder().get());
+        inventory.setItem(slot, item.get());
         itemMap.put(slot, item);
         return this;
     }

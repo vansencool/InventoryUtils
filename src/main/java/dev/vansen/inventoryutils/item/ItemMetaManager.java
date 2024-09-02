@@ -1,13 +1,11 @@
 package dev.vansen.inventoryutils.item;
 
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
-import net.kyori.adventure.text.Component;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -25,28 +23,6 @@ public class ItemMetaManager {
      */
     public ItemMetaManager(@NotNull ItemStack itemStack) {
         this.itemStack = itemStack;
-    }
-
-    /**
-     * Sets the lore of the ItemStack using a list of strings.
-     *
-     * @param lore The new lore as a list of strings.
-     * @return The current ItemMetaManager instance.
-     */
-    @CanIgnoreReturnValue
-    public ItemMetaManager setLore(@NotNull List<String> lore) {
-        return meta(meta -> meta.setLore(lore));
-    }
-
-    /**
-     * Sets the lore of the ItemStack using a list of Components.
-     *
-     * @param lore The new lore as a list of Components.
-     * @return The current ItemMetaManager instance.
-     */
-    @CanIgnoreReturnValue
-    public ItemMetaManager lore(@NotNull List<Component> lore) {
-        return meta(meta -> meta.lore(lore));
     }
 
     /**

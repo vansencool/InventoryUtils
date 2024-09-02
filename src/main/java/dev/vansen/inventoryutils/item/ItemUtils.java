@@ -1,6 +1,6 @@
 package dev.vansen.inventoryutils.item;
 
-import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -8,29 +8,19 @@ import org.jetbrains.annotations.NotNull;
  */
 @SuppressWarnings("unused")
 public class ItemUtils {
-
-    private final ItemBuilder itemBuilder;
+    private final ItemStack item;
     private final ItemMetaManager itemMetaManager;
     private final ItemInteractionHandler itemInteractionHandler;
 
     /**
-     * Constructs a new ItemUtils instance for the specified material.
+     * Constructs a new ItemUtils instance with the specified ItemStack.
      *
-     * @param material The material of the item.
+     * @param itemStack The ItemStack to manage.
      */
-    public ItemUtils(@NotNull Material material) {
-        this.itemBuilder = new ItemBuilder(material);
-        this.itemMetaManager = new ItemMetaManager(itemBuilder.get());
-        this.itemInteractionHandler = new ItemInteractionHandler(itemBuilder.get());
-    }
-
-    /**
-     * Gets the ItemBuilder for customizing the item.
-     *
-     * @return The ItemBuilder instance.
-     */
-    public @NotNull ItemBuilder builder() {
-        return itemBuilder;
+    public ItemUtils(@NotNull ItemStack itemStack) {
+        this.item = itemStack;
+        this.itemMetaManager = new ItemMetaManager(item);
+        this.itemInteractionHandler = new ItemInteractionHandler(item);
     }
 
     /**
@@ -49,5 +39,9 @@ public class ItemUtils {
      */
     public @NotNull ItemInteractionHandler interactionHandler() {
         return itemInteractionHandler;
+    }
+
+    public @NotNull ItemStack get() {
+        return item;
     }
 }

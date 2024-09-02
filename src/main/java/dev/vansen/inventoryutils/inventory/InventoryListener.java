@@ -1,6 +1,5 @@
-package dev.vansen.inventoryutils;
+package dev.vansen.inventoryutils.inventory;
 
-import dev.vansen.inventoryutils.inventory.FairInventory;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -9,7 +8,7 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.jetbrains.annotations.NotNull;
 
-public class InventoryEventListener implements Listener {
+public class InventoryListener implements Listener {
 
     @EventHandler
     public void onInventoryClick(final InventoryClickEvent event) {
@@ -33,7 +32,7 @@ public class InventoryEventListener implements Listener {
     }
 
     @EventHandler
-    public void onInventoryDrag(InventoryDragEvent event) {
+    public void onInventoryDrag(final InventoryDragEvent event) {
         if (event.getInventory().getHolder() instanceof FairInventory fairInventory) {
             fairInventory.handleDrag(event);
         }

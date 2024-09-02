@@ -8,6 +8,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -69,6 +71,50 @@ public class ItemBuilder {
     }
 
     /**
+     * Sets the lore of the ItemStack using an array of strings.
+     *
+     * @param lore The lore as an array of strings.
+     * @return The current ItemBuilder instance.
+     */
+    @CanIgnoreReturnValue
+    public ItemBuilder setLore(@NotNull String... lore) {
+        return meta(meta -> meta.setLore(Arrays.asList(lore)));
+    }
+
+    /**
+     * Sets the lore of the ItemStack using a list of strings.
+     *
+     * @param lore The lore as a list of strings.
+     * @return The current ItemBuilder instance.
+     */
+    @CanIgnoreReturnValue
+    public ItemBuilder setLore(@NotNull List<String> lore) {
+        return meta(meta -> meta.setLore(lore));
+    }
+
+    /**
+     * Sets the lore of the ItemStack using an array of Components.
+     *
+     * @param lore The lore as an array of Components.
+     * @return The current ItemBuilder instance.
+     */
+    @CanIgnoreReturnValue
+    public ItemBuilder lore(@NotNull Component... lore) {
+        return meta(meta -> meta.lore(Arrays.asList(lore)));
+    }
+
+    /**
+     * Sets the lore of the ItemStack using a list of Components.
+     *
+     * @param lore The lore as a list of Components.
+     * @return The current ItemBuilder instance.
+     */
+    @CanIgnoreReturnValue
+    public ItemBuilder lore(@NotNull List<Component> lore) {
+        return meta(meta -> meta.lore(lore));
+    }
+
+    /**
      * Sets the amount of items in the stack.
      *
      * @param amount The new amount of items.
@@ -119,5 +165,14 @@ public class ItemBuilder {
     @CanIgnoreReturnValue
     public ItemBuilder enchant(@NotNull Enchantment enchantment, int level) {
         return enchant(enchantment, level, true);
+    }
+
+    /**
+     * Builds and returns an ItemUtils instance based on the current ItemBuilder state.
+     *
+     * @return An ItemUtils instance.
+     */
+    public ItemUtils build() {
+        return new ItemUtils(this.itemStack);
     }
 }

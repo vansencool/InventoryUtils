@@ -1,5 +1,6 @@
 package dev.vansen.inventoryutils;
 
+import dev.vansen.inventoryutils.inventory.InventoryListener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -21,7 +22,7 @@ public class InventoryUtils {
      */
     public static void init(@NotNull JavaPlugin plugin) {
         InventoryUtils.plugin = plugin;
-        plugin.getServer().getPluginManager().registerEvents(new InventoryEventListener(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new InventoryListener(), plugin);
     }
 
     /**
