@@ -9,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings("unused")
 public class ItemUtils {
     private final ItemStack item;
-    private final ItemMetaManager itemMetaManager;
     private final ItemInteractionHandler itemInteractionHandler;
 
     /**
@@ -19,17 +18,7 @@ public class ItemUtils {
      */
     public ItemUtils(@NotNull ItemStack itemStack) {
         this.item = itemStack;
-        this.itemMetaManager = new ItemMetaManager(item);
         this.itemInteractionHandler = new ItemInteractionHandler(item);
-    }
-
-    /**
-     * Gets the ItemMetaManager for managing item metadata.
-     *
-     * @return The ItemMetaManager instance.
-     */
-    public @NotNull ItemMetaManager metaManager() {
-        return itemMetaManager;
     }
 
     /**

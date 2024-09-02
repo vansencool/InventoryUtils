@@ -4,6 +4,7 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
@@ -153,6 +154,60 @@ public class ItemBuilder {
     @CanIgnoreReturnValue
     public ItemBuilder enchant(@NotNull Enchantment enchantment, int level, boolean ignoreLevelRestriction) {
         return meta(meta -> meta.addEnchant(enchantment, level, ignoreLevelRestriction));
+    }
+
+    /**
+     * Adds item flags to the ItemStack.
+     *
+     * @param flags The item flags to add.
+     * @return The current ItemBuilder instance.
+     */
+    @CanIgnoreReturnValue
+    public ItemBuilder itemFlags(@NotNull ItemFlag... flags) {
+        return meta(meta -> meta.addItemFlags(flags));
+    }
+
+    /**
+     * Removes item flags from the ItemStack.
+     *
+     * @param flags The item flags to remove.
+     * @return The current ItemBuilder instance.
+     */
+    @CanIgnoreReturnValue
+    public ItemBuilder removeItemFlags(@NotNull ItemFlag... flags) {
+        return meta(meta -> meta.removeItemFlags(flags));
+    }
+
+    /**
+     * Sets a custom model data value for the ItemStack.
+     *
+     * @param modelData The custom model data value.
+     * @return The current ItemBuilder instance.
+     */
+    @CanIgnoreReturnValue
+    public ItemBuilder customModelData(int modelData) {
+        return meta(meta -> meta.setCustomModelData(modelData));
+    }
+
+    /**
+     * Sets the unbreakable property of the ItemStack to true.
+     *
+     * @return The current ItemBuilder instance.
+     */
+    @CanIgnoreReturnValue
+    public ItemBuilder unbreakable() {
+        return meta(meta -> meta.setUnbreakable(true));
+    }
+
+    /**
+     * Sets the unbreakable property of the ItemStack.
+     *
+     * @param unbreakable True if the item should be unbreakable, false otherwise.
+     * @return The current ItemBuilder instance.
+     */
+    @CanIgnoreReturnValue
+    public ItemBuilder unbreakable(boolean unbreakable) {
+        return meta(meta -> meta.setUnbreakable(unbreakable));
     }
 
     /**
