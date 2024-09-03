@@ -105,7 +105,6 @@ public class InventorySize {
     @CanIgnoreReturnValue
     public static InventorySize like(int rows, int slotsPerRow) {
         if (slotsPerRow != 9) throw new IllegalArgumentException("The number of slots per row must be 9");
-        if (rows > 5) throw new IllegalArgumentException("The number of rows must be 5 or less");
         return new InventorySize(rows * slotsPerRow);
     }
 }
