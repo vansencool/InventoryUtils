@@ -14,7 +14,7 @@ import java.util.function.Consumer;
 public class ItemInteractionHandler {
 
     private final ItemStack itemStack;
-    private Consumer<InventoryClickEvent> clickAction;
+    public Consumer<InventoryClickEvent> clickAction;
 
     /**
      * Constructs a new ItemInteractionHandler for the specified ItemStack.
@@ -46,14 +46,5 @@ public class ItemInteractionHandler {
         if (clickAction != null) {
             clickAction.accept(event);
         }
-    }
-
-    /**
-     * Builds and returns an ItemUtils instance.
-     *
-     * @return An ItemUtils instance.
-     */
-    public @NotNull ItemUtils build() {
-        return new ItemUtils(itemStack);
     }
 }
