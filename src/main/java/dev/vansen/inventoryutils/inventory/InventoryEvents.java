@@ -8,11 +8,15 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.jetbrains.annotations.NotNull;
 
-public class InventoryListener implements Listener {
+public final class InventoryEvents implements Listener {
 
     @EventHandler
     public void onInventoryClick(final InventoryClickEvent event) {
         if (event.getInventory().getHolder() instanceof FairInventory fairInventory) {
+            if (InventoryOptions.TRIGGER_CLICK_ON_MAIN_INVENTORY.value() && event.getClickedInventory() != event.getInventory()) {
+                fairInventory.handleClick(event);
+                return;
+            }
             fairInventory.handleClick(event);
         }
     }

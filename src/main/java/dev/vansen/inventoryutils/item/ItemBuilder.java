@@ -11,13 +11,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 /**
  * A builder class for creating and customizing ItemStack objects.
  */
 @SuppressWarnings({"unused", "deprecation"})
-public class ItemBuilder {
+public final class ItemBuilder {
 
     private final ItemStack itemStack;
 
@@ -40,13 +41,166 @@ public class ItemBuilder {
     }
 
     /**
+     * Constructs a new ItemBuilder instance for the specified material and amount.
+     *
+     * @param material The material of the item.
+     * @param amount   The amount of the item.
+     */
+    public ItemBuilder(@NotNull Material material, int amount) {
+        this.itemStack = new ItemStack(material, amount);
+    }
+
+    /**
      * Creates a new ItemBuilder instance for the specified material.
      *
      * @param material The material of the item.
      * @return A new ItemBuilder instance.
      */
-    public static ItemBuilder create(@NotNull Material material) {
+    public static ItemBuilder from(@NotNull Material material) {
         return new ItemBuilder(material);
+    }
+
+    /**
+     * Creates a new ItemBuilder instance for the specified ItemStack.
+     *
+     * @param itemStack The ItemStack.
+     * @return A new ItemBuilder instance.
+     */
+    public static ItemBuilder from(@NotNull ItemStack itemStack) {
+        return new ItemBuilder(itemStack);
+    }
+
+    /**
+     * Creates a new ItemBuilder instance for the specified material and amount.
+     *
+     * @param material The material of the item.
+     * @param amount   The amount of the item.
+     * @return A new ItemBuilder instance.
+     */
+    public static ItemBuilder from(@NotNull Material material, int amount) {
+        return new ItemBuilder(material, amount);
+    }
+
+    /**
+     * Creates a new ItemBuilder instance from a serialized byte array.
+     *
+     * @param serialized The serialized byte array.
+     * @return A new ItemBuilder instance.
+     */
+    public static ItemBuilder from(byte @NotNull [] serialized) {
+        return new ItemBuilder(ItemStack.deserializeBytes(serialized));
+    }
+
+    /**
+     * Creates a new ItemBuilder instance from a serialized map.
+     *
+     * @param serialized The serialized map.
+     * @return A new ItemBuilder instance.
+     */
+    public static ItemBuilder from(@NotNull Map<String, Object> serialized) {
+        return new ItemBuilder(ItemStack.deserialize(serialized));
+    }
+
+    /**
+     * Alternative alias for {@link #from(Material)}
+     *
+     * @param material The material of the item.
+     * @return A new ItemBuilder instance.
+     */
+    public static ItemBuilder create(@NotNull Material material) {
+        return from(material);
+    }
+
+    /**
+     * Alternative alias for {@link #from(ItemStack)}
+     *
+     * @param itemStack The ItemStack.
+     * @return A new ItemBuilder instance.
+     */
+    public static ItemBuilder create(@NotNull ItemStack itemStack) {
+        return from(itemStack);
+    }
+
+    /**
+     * Alternative alias for {@link #from(Material, int)}
+     *
+     * @param material The material of the item.
+     * @param amount   The amount of the item.
+     * @return A new ItemBuilder instance.
+     */
+    public static ItemBuilder create(@NotNull Material material, int amount) {
+        return from(material, amount);
+    }
+
+    /**
+     * Alternative alias for {@link #from(byte[])}
+     *
+     * @param serialized The serialized byte array.
+     * @return A new ItemBuilder instance.
+     */
+    public static ItemBuilder create(byte @NotNull [] serialized) {
+        return from(serialized);
+    }
+
+    /**
+     * Alternative alias for {@link #from(Map)}
+     *
+     * @param serialized The serialized map.
+     * @return A new ItemBuilder instance.
+     */
+    public static ItemBuilder create(@NotNull Map<String, Object> serialized) {
+        return from(serialized);
+    }
+
+    /**
+     * Alternative alias for {@link #from(Material)}
+     *
+     * @param material The material of the item.
+     * @return A new ItemBuilder instance.
+     */
+    public static ItemBuilder of(@NotNull Material material) {
+        return from(material);
+    }
+
+    /**
+     * Alternative alias for {@link #from(ItemStack)}
+     *
+     * @param itemStack The ItemStack.
+     * @return A new ItemBuilder instance.
+     */
+    public static ItemBuilder of(@NotNull ItemStack itemStack) {
+        return from(itemStack);
+    }
+
+    /**
+     * Alternative alias for {@link #from(Material, int)}
+     *
+     * @param material The material of the item.
+     * @param amount   The amount of the item.
+     * @return A new ItemBuilder instance.
+     */
+    public static ItemBuilder of(@NotNull Material material, int amount) {
+        return from(material, amount);
+    }
+
+    /**
+     * Alternative alias for {@link #from(byte[])}
+     *
+     * @param serialized The serialized byte array.
+     * @return A new ItemBuilder instance.
+     */
+    public static ItemBuilder of(byte @NotNull [] serialized) {
+        return from(serialized);
+    }
+
+    /**
+     * Alternative alias for {@link #from(Map)}
+     *
+     * @param serialized The serialized map.
+     * @return A new ItemBuilder instance.
+     */
+    public static ItemBuilder of(@NotNull Map<String, Object> serialized) {
+        return from(serialized);
     }
 
     /**
@@ -177,6 +331,17 @@ public class ItemBuilder {
     }
 
     /**
+     * Alternative alias for {@link #itemFlags(ItemFlag...)}
+     *
+     * @param flags The item flags to add.
+     * @return The current ItemBuilder instance.
+     */
+    @CanIgnoreReturnValue
+    public ItemBuilder flags(@NotNull ItemFlag... flags) {
+        return itemFlags(flags);
+    }
+
+    /**
      * Removes item flags from the ItemStack.
      *
      * @param flags The item flags to remove.
@@ -188,6 +353,17 @@ public class ItemBuilder {
     }
 
     /**
+     * Alternative alias for {@link #removeItemFlags(ItemFlag...)}
+     *
+     * @param flags The item flags to remove.
+     * @return The current ItemBuilder instance.
+     */
+    @CanIgnoreReturnValue
+    public ItemBuilder removeFlags(@NotNull ItemFlag... flags) {
+        return removeItemFlags(flags);
+    }
+
+    /**
      * Sets a custom model data value for the ItemStack.
      *
      * @param modelData The custom model data value.
@@ -196,6 +372,17 @@ public class ItemBuilder {
     @CanIgnoreReturnValue
     public ItemBuilder customModelData(int modelData) {
         return meta(meta -> meta.setCustomModelData(modelData));
+    }
+
+    /**
+     * Alternative alias for {@link #customModelData(int)}
+     *
+     * @param modelData The custom model data value.
+     * @return The current ItemBuilder instance.
+     */
+    @CanIgnoreReturnValue
+    public ItemBuilder modelData(int modelData) {
+        return customModelData(modelData);
     }
 
     /**
@@ -232,7 +419,48 @@ public class ItemBuilder {
     }
 
     /**
-     * Builds and returns an ItemUtils instance based on the current ItemBuilder state.
+     * Adds an enchantment to the ItemStack.
+     *
+     * @param enchantment The enchantment to add.
+     * @return The current ItemBuilder instance.
+     */
+    @CanIgnoreReturnValue
+    public ItemBuilder enchant(@NotNull Enchantment enchantment) {
+        return enchant(enchantment, 1);
+    }
+
+    /**
+     * Serializes the ItemStack into a byte array.
+     *
+     * @return The serialized byte array.
+     */
+    public byte @NotNull [] serializeBytes() {
+        return itemStack.serializeAsBytes();
+    }
+
+    /**
+     * Serializes the ItemStack into a map, generally not recommended, use {@link #serializeBytes()}
+     *
+     * @return The serialized map.
+     * @see #serializeBytes()
+     */
+    public Map<String, Object> serialize() {
+        return itemStack.serialize();
+    }
+
+    /**
+     * Ensures that the ItemStack conversations are processed for this ItemStack.
+     *
+     * @return The current ItemBuilder instance.
+     */
+    @CanIgnoreReturnValue
+    public ItemBuilder ensureVersions() {
+        itemStack.ensureServerConversions();
+        return this;
+    }
+
+    /**
+     * Builds and returns an ItemUtils instance.
      *
      * @return An ItemUtils instance.
      */

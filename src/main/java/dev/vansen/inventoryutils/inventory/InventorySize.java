@@ -16,7 +16,7 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
  * There are also methods to get the size from a given number of rows or slots.
  */
 @SuppressWarnings("unused")
-public class InventorySize {
+public final class InventorySize {
 
     private final int size;
 
@@ -59,6 +59,18 @@ public class InventorySize {
     }
 
     /**
+     * Custom method to create an inventory size with the given number of rows and slots per row.
+     *
+     * @param rows        The number of rows in the inventory.
+     * @param slotsPerRow The number of slots in each row.
+     * @return A new InventorySize instance.
+     */
+    @CanIgnoreReturnValue
+    public static InventorySize like(int rows, int slotsPerRow) {
+        return new InventorySize(rows * slotsPerRow);
+    }
+
+    /**
      * Gets the size of the inventory.
      *
      * @return The number of slots in the inventory.
@@ -83,28 +95,5 @@ public class InventorySize {
      */
     public int slotsPerRow() {
         return 9;
-    }
-
-    /**
-     * Like method.
-     * This method is used to calculate the size of the inventory
-     * based on a given number of rows and slots per row.
-     * <p>
-     * For example, if you want to create an inventory with 3 rows
-     * and 9 slots per row, you can use this method like this:
-     * <pre>
-     *     InventorySize.like(3, 9);
-     * </pre>
-     * It will return a new InventorySize instance with the size
-     * of 27 (3 rows * 9 slots per row).
-     *
-     * @param rows        The number of rows in the inventory.
-     * @param slotsPerRow The number of slots in each row.
-     * @return A new InventorySize instance.
-     */
-    @CanIgnoreReturnValue
-    public static InventorySize like(int rows, int slotsPerRow) {
-        if (slotsPerRow != 9) throw new IllegalArgumentException("The number of slots per row must be 9");
-        return new InventorySize(rows * slotsPerRow);
     }
 }

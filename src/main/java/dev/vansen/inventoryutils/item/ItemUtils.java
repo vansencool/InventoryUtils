@@ -1,5 +1,6 @@
 package dev.vansen.inventoryutils.item;
 
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -10,9 +11,9 @@ import java.util.function.Consumer;
  * A utility class that provides a simplified interface for managing items in Minecraft.
  */
 @SuppressWarnings("unused")
-public class ItemUtils {
+public final class ItemUtils {
     private final ItemStack item;
-    private final ItemInteractionHandler itemInteractionHandler;
+    private final ItemClick itemClick;
 
     /**
      * Constructs a new ItemUtils instance with the specified ItemStack.
@@ -21,7 +22,7 @@ public class ItemUtils {
      */
     public ItemUtils(@NotNull ItemStack itemStack) {
         this.item = itemStack;
-        this.itemInteractionHandler = new ItemInteractionHandler(item);
+        this.itemClick = ItemClick.of();
     }
 
     /**
@@ -34,12 +35,12 @@ public class ItemUtils {
     }
 
     /**
-     * Gets the ItemInteractionHandler for managing item interactions.
+     * Gets the ItemClick for managing item interactions.
      *
-     * @return The ItemInteractionHandler instance.
+     * @return The ItemClick instance.
      */
-    public @NotNull ItemInteractionHandler interactionHandler() {
-        return itemInteractionHandler;
+    public @NotNull ItemClick itemClick() {
+        return itemClick;
     }
 
     /**
@@ -47,11 +48,17 @@ public class ItemUtils {
      *
      * @return The ItemUtils instance.
      */
+    @CanIgnoreReturnValue
     public @NotNull ItemUtils click(@NotNull Consumer<InventoryClickEvent> event) {
-        itemInteractionHandler.click(event);
+        itemClick.click(event);
         return this;
     }
 
+    /**
+     * Gets the underlying ItemStack.
+     *
+     * @return The ItemStack.
+     */
     public @NotNull ItemStack get() {
         return item;
     }
