@@ -660,14 +660,17 @@ public class FairInventory implements InventoryHolder {
     /**
      * Handles the inventory click event.
      *
-     * @param event The InventoryClickEvent.
+     * @param event  The InventoryClickEvent.
+     * @param doItem Whether to handle item clicks.
      */
-    public void handleClick(@NotNull InventoryClickEvent event) {
+    public void handleClick(@NotNull InventoryClickEvent event, boolean doItem) {
         if (cancelClicksCondition != null && cancelClicksCondition.test(event)) event.setCancelled(true);
         if (itemClickCondition != null && !itemClickCondition.test(event)) return;
 
-        ItemUtils item = itemMap.get(event.getSlot());
-        if (item != null) item.itemClick().handleClick(event);
+        if (doItem) {
+            ItemUtils item = itemMap.get(event.getSlot());
+            if (item != null) item.itemClick().handleClick(event);
+        }
         if (actionHandler != null) actionHandler.accept(event.getAction(), event);
         if (clickTypeHandler != null) clickTypeHandler.accept(event.getClick(), event);
     }

@@ -13,11 +13,11 @@ public final class InventoryEvents implements Listener {
     @EventHandler
     public void onInventoryClick(final InventoryClickEvent event) {
         if (event.getInventory().getHolder() instanceof FairInventory fairInventory) {
-            if (InventoryOptions.TRIGGER_CLICK_ON_MAIN_INVENTORY.value() && event.getClickedInventory() != event.getInventory()) {
-                fairInventory.handleClick(event);
+            if (InventoryOptions.TRIGGER_CLICK_ON_MAIN_INVENTORY.value() && event.getClickedInventory() != null && event.getClickedInventory().getHolder() instanceof FairInventory) {
+                fairInventory.handleClick(event, true);
                 return;
             }
-            fairInventory.handleClick(event);
+            fairInventory.handleClick(event, false);
         }
     }
 
