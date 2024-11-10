@@ -12,6 +12,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
@@ -191,6 +192,11 @@ public class FairInventory implements InventoryHolder {
      */
     @CanIgnoreReturnValue
     public FairInventory set(int slot, @NotNull ItemUtils item) {
+        if (slot == 0) {
+            inventory.setItem(0, item.get());
+            itemMap.put(0, item);
+            return this;
+        }
         inventory.setItem(slot - 1, item.get()); // Adjusting for 1-based indexing
         itemMap.put(slot - 1, item);
         return this;
@@ -205,6 +211,10 @@ public class FairInventory implements InventoryHolder {
      */
     @CanIgnoreReturnValue
     public FairInventory set(int slot, @NotNull ItemStack item) {
+        if (slot == 0) {
+            inventory.setItem(0, item);
+            return this;
+        }
         inventory.setItem(slot - 1, item); // Adjusting for 1-based indexing
         return this;
     }
@@ -212,12 +222,13 @@ public class FairInventory implements InventoryHolder {
     /**
      * Sets an item at a specific slot in the inventory.
      *
-     * @param slot The slot to set the item in (0-based index).
-     * @param item The ItemUtils instance representing the item to set.
+     * @param slot    The slot to set the item in (0-based index).
+     * @param item    The ItemUtils instance representing the item to set.
+     * @param ignored Ignored value, can be anything
      * @return The current FairInventory instance.
      */
     @CanIgnoreReturnValue
-    public FairInventory set(int slot, @NotNull ItemUtils item, boolean disable) {
+    public FairInventory set(int slot, @NotNull ItemUtils item, @Nullable Object ignored) {
         inventory.setItem(slot, item.get());
         itemMap.put(slot, item);
         return this;
@@ -226,12 +237,13 @@ public class FairInventory implements InventoryHolder {
     /**
      * Sets an item at a specific slot in the inventory.
      *
-     * @param slot The slot to set the item in (0-based index).
-     * @param item The ItemStack instance representing the item to set.
+     * @param slot    The slot to set the item in (0-based index).
+     * @param item    The ItemStack instance representing the item to set.
+     * @param ignored Ignored value, can be anything
      * @return The current FairInventory instance.
      */
     @CanIgnoreReturnValue
-    public FairInventory set(int slot, @NotNull ItemStack item, boolean disable) {
+    public FairInventory set(int slot, @NotNull ItemStack item, @Nullable Object ignored) {
         inventory.setItem(slot, item);
         return this;
     }
